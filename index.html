@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuestionario POO - Azul Oscuro Futurista</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a2a4a 25%, #0d1f3c 50%, #051a35 75%, #0a0e27 100%);
+            background-attachment: fixed;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 40px 20px;
+            position: relative;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 90% 80%, rgba(0, 136, 204, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(0, 136, 204, 0.03) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 0;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            50% { transform: translateY(20px) translateX(10px); }
+        }
+
+
+
+        .container {
+            background: linear-gradient(135deg, rgba(10, 14, 39, 0.95) 0%, rgba(26, 42, 74, 0.95) 100%);
+            border-radius: 30px;
+            box-shadow: 
+                0 0 60px rgba(0, 212, 255, 0.25),
+                0 0 30px rgba(0, 136, 204, 0.15),
+                inset 0 0 60px rgba(0, 136, 204, 0.1),
+                0 20px 60px rgba(0, 0, 0, 0.6);
+            max-width: 750px;
+            width: 100%;
+            padding: 50px;
+            position: relative;
+            z-index: 1;
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            backdrop-filter: blur(20px);
+            overflow: visible;
+        }
+
+
+
+        .header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 2px solid rgba(0, 212, 255, 0.3);
+            padding-bottom: 25px;
+            position: relative;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #00d4ff, transparent);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+        }
+
+        .header h1 {
+            background: linear-gradient(135deg, #00d4ff, #0088cc, #00a8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        .header p {
+            color: #00a8ff;
+            font-weight: 500;
+            font-size: 14px;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .btn-exercises {
+            background: linear-gradient(135deg, #0088cc, #00a8ff);
+            color: #e0f7ff;
+            margin-bottom: 15px;
+            box-shadow: 
+                0 8px 30px rgba(0, 136, 204, 0.4),
+                0 0 20px rgba(0, 168, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 12px 30px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-size: 14px;
+        }
+
+        .btn-exercises:hover {
+            transform: translateY(-2px);
+            box-shadow: 
+                0 10px 35px rgba(0, 136, 204, 0.5),
+                0 0 25px rgba(0, 212, 255, 0.3);
+        }
+
+        .progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            font-size: 13px;
+            color: #ffffff;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: linear-gradient(90deg, rgba(0, 88, 204, 0.2), rgba(0, 136, 204, 0.1));
+            border-radius: 10px;
+            margin: 15px 0;
+            overflow: hidden;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            box-shadow: 
+                inset 0 0 20px rgba(0, 136, 204, 0.1),
+                0 0 10px rgba(0, 212, 255, 0.2);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00a8ff, #00d4ff, #0088cc);
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 0 20px rgba(0, 212, 255, 0.8),
+                0 0 40px rgba(0, 168, 255, 0.5),
+                inset 0 0 10px rgba(255, 255, 255, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .exercise-textarea {
+            width: 100%;
+            min-height: 120px;
+            padding: 15px;
+            border: 2px solid rgba(0, 136, 204, 0.3);
+            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(0, 88, 204, 0.05), rgba(0, 136, 204, 0.02));
+            color: #ffffff;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+            resize: vertical;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.3),
+                inset 0 0 20px rgba(0, 136, 204, 0.05);
+        }
+
+        .exercise-textarea:focus {
+            outline: none;
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 136, 204, 0.08));
+            box-shadow: 
+                0 8px 30px rgba(0, 212, 255, 0.25),
+                inset 0 0 20px rgba(0, 136, 204, 0.05);
+        }
+
+        .exercise-textarea::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .question-type {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 900;
+            padding: 8px 16px;
+            border-radius: 25px;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 136, 204, 0.1));
+            color: #ffffff;
+            border: 1px solid rgba(0, 212, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 212, 255, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .question-type.ejercicio {
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.15), rgba(0, 136, 204, 0.15));
+            color: #00a8ff;
+            border: 1px solid rgba(0, 168, 255, 0.4);
+            box-shadow: 0 0 15px rgba(0, 168, 255, 0.2);
+        }
+
+        .question-text {
+            font-size: 19px;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .option {
+            padding: 18px;
+            border: 2px solid rgba(0, 136, 204, 0.3);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: linear-gradient(135deg, rgba(0, 88, 204, 0.05), rgba(0, 136, 204, 0.02));
+            position: relative;
+            padding-left: 50px;
+            box-shadow: 
+                0 5px 20px rgba(0, 0, 0, 0.3),
+                inset 0 0 20px rgba(0, 136, 204, 0.05);
+            overflow: hidden;
+            color: #ffffff;
+        }
+
+        .option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.5s;
+            pointer-events: none;
+        }
+
+        .option:hover:not(.disabled)::before {
+            left: 100%;
+        }
+
+        .option input[type="radio"] {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: #00d4ff;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 136, 204, 0.08));
+            box-shadow: 
+                0 8px 30px rgba(0, 212, 255, 0.25),
+                inset 0 0 20px rgba(0, 136, 204, 0.05);
+            transform: translateX(8px);
+        }
+
+        .option.selected {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(0, 136, 204, 0.1));
+            box-shadow: 
+                0 0 25px rgba(0, 212, 255, 0.4),
+                inset 0 0 20px rgba(0, 212, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.75;
+        }
+
+        .option.correct {
+            border-color: #00d4ff;
+            background: linear-gradient(135deg, rgba(0, 200, 150, 0.15), rgba(0, 168, 255, 0.1));
+            box-shadow: 
+                0 0 30px rgba(0, 200, 150, 0.4),
+                inset 0 0 20px rgba(0, 200, 150, 0.05);
+        }
+
+        .option.incorrect {
+            border-color: #0088cc;
+            background: linear-gradient(135deg, rgba(0, 100, 200, 0.2), rgba(0, 88, 204, 0.1));
+            box-shadow: 
+                0 0 30px rgba(0, 88, 204, 0.4),
+                inset 0 0 20px rgba(0, 88, 204, 0.05);
+            animation: shake 0.3s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+
+        .option.correct::after {
+            content: '✓ CORRECTO';
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #00d4ff;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+        }
+
+        .option.incorrect::after {
+            content: '✗ INCORRECTO';
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #0088cc;
+            font-weight: 900;
+            font-size: 13px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(0, 88, 204, 0.5);
+        }
+
+        .buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 35px;
+            justify-content: center;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        button {
+            padding: 14px 35px;
+            border: none;
+            border-radius: 15px;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        button:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-verify {
+            background: linear-gradient(135deg, #0088cc, #00a8ff);
+            color: #e0f7ff;
+            flex: 1;
+            min-width: 180px;
+            box-shadow: 
+                0 8px 30px rgba(0, 136, 204, 0.4),
+                0 0 20px rgba(0, 168, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-verify:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(0, 136, 204, 0.6),
+                0 0 30px rgba(0, 212, 255, 0.4);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+
+        .btn-verify:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-verify:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .btn-next {
+            background: linear-gradient(135deg, #00a8ff, #00d4ff);
+            color: #051a35;
+            flex: 1;
+            min-width: 180px;
+            box-shadow: 
+                0 8px 30px rgba(0, 168, 255, 0.4),
+                0 0 20px rgba(0, 212, 255, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            position: relative;
+            z-index: 1;
+            font-weight: 900;
+        }
+
+        .btn-next:hover:not(:disabled) {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(0, 168, 255, 0.6),
+                0 0 30px rgba(0, 212, 255, 0.5);
+            border-color: rgba(0, 212, 255, 0.6);
+        }
+
+        .btn-next:active {
+            transform: translateY(-1px);
+        }
+
+        .btn-next:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+
+        .feedback {
+            margin-top: 25px;
+            padding: 18px;
+            border-radius: 15px;
+            font-weight: 700;
+            display: none;
+            border-left: 4px solid;
+            letter-spacing: 0.5px;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .feedback.correct {
+            background: linear-gradient(135deg, rgba(0, 200, 150, 0.15), rgba(0, 168, 255, 0.1));
+            color: #ffffff;
+            border-color: #00a8ff;
+            box-shadow: 0 0 25px rgba(0, 200, 150, 0.25);
+        }
+
+        .feedback.incorrect {
+            background: linear-gradient(135deg, rgba(0, 100, 200, 0.15), rgba(0, 88, 204, 0.1));
+            color: #ffffff;
+            border-color: #0088cc;
+            box-shadow: 0 0 25px rgba(0, 88, 204, 0.25);
+        }
+
+        .answer-explanation {
+            margin-top: 20px;
+            padding: 18px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(0, 136, 204, 0.08));
+            border-left: 4px solid #00d4ff;
+            border-radius: 12px;
+            display: none;
+            font-size: 14px;
+            color: #ffffff;
+            line-height: 1.7;
+            box-shadow: 
+                0 5px 20px rgba(0, 136, 204, 0.15),
+                inset 0 0 20px rgba(0, 212, 255, 0.05);
+        }
+
+        .answer-explanation.show {
+            display: block;
+            animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .results-summary {
+            text-align: center;
+            padding: 50px 30px;
+            background: linear-gradient(135deg, rgba(0, 168, 255, 0.1), rgba(0, 136, 204, 0.08));
+            border-radius: 25px;
+            margin-top: 25px;
+            border: 2px solid rgba(0, 212, 255, 0.3);
+            box-shadow: 
+                0 0 40px rgba(0, 212, 255, 0.2),
+                inset 0 0 40px rgba(0, 136, 204, 0.05);
+        }
+
+        .results-summary h2 {
+            background: linear-gradient(135deg, #00d4ff, #00a8ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 15px;
+            font-size: 32px;
+            letter-spacing: 2px;
+            text-shadow: 0 0 30px rgba(0, 212, 255, 0.2);
+        }
+
+        .score {
+            font-size: 56px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00a8ff, #00d4ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 25px 0;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.25);
+            letter-spacing: 2px;
+        }
+
+        .results-summary p {
+            color: #ffffff;
+            font-size: 16px;
+            margin-top: 15px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        
+
+        .btn-restart {
+            background: linear-gradient(135deg, #00a8ff, #00d4ff);
+            color: #051a35;
+            margin-top: 30px;
+            box-shadow: 
+                0 8px 30px rgba(0, 168, 255, 0.4),
+                0 0 20px rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            padding: 15px 40px;
+            font-weight: 900;
+            letter-spacing: 1.5px;
+        }
+
+        .btn-restart:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 12px 40px rgba(0, 168, 255, 0.6),
+                0 0 30px rgba(0, 212, 255, 0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 CUESTIONARIO PBD</h1>
+            <p>Procedimientos Almacenados y Funciones en SQL Server</p>
+            <button class="btn-exercises" onclick="jumpToExercises()">⚡ IR A EJERCICIOS</button>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress">
+                <span id="progressText">Pregunta 1 de 30</span>
+                <span id="scoreText">Correctas: 0/30</span>
+            </div>
+        </div>
+
+        <div id="quizContainer">
+            <div class="question-container">
+                <div class="question-type" id="questionType">Pregunta</div>
+                <div class="question-text" id="questionText"></div>
+                <div class="options" id="optionsContainer"></div>
+                <div class="answer-explanation" id="explanation"></div>
+                <div class="feedback" id="feedback"></div>
+            </div>
+
+            <div class="buttons">
+                <button class="btn-verify" id="verifyBtn" onclick="verifyAnswer()">Verificar</button>
+                <button class="btn-verify" id="showAnswerBtn" onclick="showAnswer()" style="display:none; background: linear-gradient(135deg, #0088cc, #00a8ff);">Ver Respuesta</button>
+                <button class="btn-next" id="nextBtn" onclick="nextQuestion()" disabled>Siguiente</button>
+            </div>
+        </div>
+
+        <div id="resultsContainer" style="display: none;">
+            <div class="results-summary">
+                <h2>¡Cuestionario Completado!</h2>
+                <div class="score" id="finalScore">0/30</div>
+                <p id="performanceMessage"></p>
+                <button class="btn-restart" onclick="restartQuiz()">Volver a Comenzar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {type:'pregunta',text:'1. ¿Qué es exactamente un Procedimiento Almacenado (Stored Procedure)?',options:['Una función matemática que realiza cálculos en memoria temporal sin tocar el disco.','Un conjunto de instrucciones SQL predefinidas y parametrizadas que se guardan directamente en el servidor de base de datos.','Una herramienta exclusiva para realizar respaldos automáticos de la base de datos.','Una tabla temporal que se destruye automáticamente cuando el usuario cierra su sesión.'],correct:1,explanation:'Un Procedimiento Almacenado es un conjunto de instrucciones SQL predefinidas que se guardan en el servidor de BD, lo que permite reutilizarlas múltiples veces.'},
+            {type:'pregunta',text:'2. ¿Cuáles son las 7 operaciones fundamentales que se pueden realizar con un procedimiento almacenado?',options:['Crear, Leer, Actualizar, Borrar, Duplicar, Encriptar y Validar.','Consultar datos, Pasar parámetros, Crear, Trabajar con dinámicos, Ejecutar, Examinar y Modificar.','Conectar, Desconectar, Indexar, Formatear, Respaldar, Clonar y Compilar.','Mapear, Migrar, Normalizar, Desnormalizar, Pivotar, Unir y Filtrar.'],correct:1,explanation:'Las 7 operaciones fundamentales son: Consultar datos, Pasar parámetros, Crear, Trabajar con dinámicos, Ejecutar, Examinar y Modificar.'},
+            {type:'pregunta',text:'3. ¿Cuáles son las 6 características principales que definen a un Procedimiento Almacenado?',options:['Reusabilidad, Encapsulación, Rendimiento, Seguridad, Manejo de Parámetros y Transacciones.','Velocidad, Escalabilidad, Estética, Indexación, Duplicación y Portabilidad.','Conectividad, Normalización, Extensibilidad, Virtualización, Elasticidad y Persistencia.','Abstracción, Herencia, Polimorfismo, Modularidad, Concurrencia y Sincronización.'],correct:0,explanation:'Las características principales son: Reusabilidad, Encapsulación, Rendimiento, Seguridad, Manejo de Parámetros y Transacciones.'},
+            {type:'pregunta',text:'4. ¿Cuál es la diferencia entre "Reusabilidad" y "Encapsulación" en el contexto de un SP?',options:['La reusabilidad mide el espacio en disco y la encapsulación mide el uso de la memoria RAM.','La reusabilidad duplica el código en las aplicaciones cliente y la encapsulación lo borra del servidor.','La reusabilidad centraliza el código para usarlo múltiples veces; la encapsulación oculta la lógica interna y las tablas.','La reusabilidad aplica solo a consultas SELECT y la encapsulación aplica exclusivamente a sentencias DELETE.'],correct:2,explanation:'Reusabilidad centraliza el código para usarlo múltiples veces, mientras que Encapsulación oculta la lógica interna protegiendo la implementación.'},
+            {type:'pregunta',text:'5. Explica detalladamente la anatomía de creación de un Procedimiento Almacenado.',options:['Inicia con DECLARE, sigue con las variables físicas, luego el cuerpo SELECT y cierra con GO.','Inicia con CREATE PROCEDURE, lista opcional de parámetros (@), palabra clave AS, y el bloque de ejecución entre BEGIN y END.','Inicia con START PROC, definición de tablas temporales, comandos SET y finaliza con RETURN.','Inicia con CREATE ALTER, parámetros de tipo entrada obligatorios, cuerpo lógico y cierre con COMMIT.'],correct:1,explanation:'La anatomía correcta es: CREATE PROCEDURE, parámetros opcionales (@), AS, y el bloque entre BEGIN y END.'},
+            {type:'pregunta',text:'6. ¿Qué símbolo sintáctico identifica a las variables y parámetros en Transact-SQL?',options:['El signo de dólar ($)','El signo de porcentaje (%)','El símbolo de la arroba (@)','El símbolo de numeral (#)'],correct:2,explanation:'En Transact-SQL, el símbolo @ identifica a las variables y parámetros (ej: @id, @nombre).'},
+            {type:'pregunta',text:'7. ¿Por qué se prefiere usar CREATE OR ALTER PROCEDURE en lugar de borrar y recrear el objeto?',options:['Porque ocupa menos espacio de almacenamiento en el disco duro del servidor.','Porque CREATE OR ALTER actualiza el código interno pero preserva intactos los permisos de seguridad y roles asignados.','Porque borra automáticamente los registros duplicados de las tablas involucradas.','Porque acelera la velocidad del internet al momento de hacer la consulta.'],correct:1,explanation:'CREATE OR ALTER preserva los permisos de seguridad y roles existentes, evitando perderlos al recrear el objeto.'},
+            {type:'pregunta',text:'8. ¿Qué comandos se utilizan para invocar o correr un procedimiento almacenado?',options:['CALL y RUN','EXECUTE y EXEC','START y OPEN','DO y PERFORM'],correct:1,explanation:'Los comandos para ejecutar un SP en SQL Server son EXECUTE y su abreviatura EXEC.'},
+            {type:'pregunta',text:'9. ¿En qué carpeta jerárquica de SQL Server Management Studio se administran físicamente los procedimientos almacenados?',options:['Servidor -> Tablas -> Columnas','Base de Datos -> Programación -> Procedimientos almacenados','Base de Datos -> Seguridad -> Roles de Usuario','Servidor -> Administración -> Monitor de Actividad'],correct:1,explanation:'Los Procedimientos Almacenados se encuentran en: Base de Datos -> Programación -> Procedimientos almacenados.'},
+            {type:'pregunta',text:'10. ¿Qué es un Procedimiento Almacenado Dinámico y cuándo se recomienda su uso?',options:['Es un SP que cambia de nombre automáticamente cada vez que se ejecuta en el sistema.','Es un SP que construye y ejecuta sentencias SQL como cadenas de texto en tiempo de ejecución; se recomienda cuando la estructura de la consulta (tablas o columnas) es variable.','Es un SP que solo funciona en bases de datos NoSQL que cambian constantemente.','Es un SP diseñado para ejecutarse únicamente cuando el servidor se queda sin memoria RAM.'],correct:1,explanation:'Un SP Dinámico construye y ejecuta SQL como texto en tiempo de ejecución, útil cuando la estructura de la consulta varía según parámetros.'},
+            {type:'pregunta',text:'11. ¿Cuáles son las 3 fases del funcionamiento del SQL Dinámico?',options:['Inicio, Desarrollo y Cierre.','Conexión, Autenticación y Consulta.','Construcción, Variabilidad y Ejecución.','Declaración, Asignación y Limpieza.'],correct:2,explanation:'Las 3 fases del SQL Dinámico son: Construcción (armar la cadena SQL), Variabilidad (adaptarse a parámetros) y Ejecución (ejecutar con sp_executesql).'},
+            {type:'pregunta',text:'12. Analiza el código: CREATE PROCEDURE SP_DynamicProcedure (@table NVARCHAR(50)) AS BEGIN DECLARE @script NVARCHAR(255) SET @script = (\'SELECT * FROM \' + @table) EXEC SP_EXECUTESQL @script END ¿Qué realiza este procedimiento?',options:['Crea una tabla física en la base de datos con el nombre que el usuario asigne.','Recibe el nombre de una tabla como parámetro, arma la consulta SELECT como texto y la ejecuta en tiempo real usando sp_executesql.','Cuenta cuántos caracteres tiene el nombre de una tabla y los devuelve como un entero.','Elimina de forma permanente la tabla especificada en el parámetro @table.'],correct:1,explanation:'Este SP recibe el nombre de una tabla como parámetro, construye dinámicamente una consulta SELECT y la ejecuta con sp_executesql.'},
+            {type:'pregunta',text:'13. ¿Qué tipo de dato se requiere utilizar obligatoriamente para las cadenas de texto ejecutadas con sp_executesql?',options:['VARCHAR','NVARCHAR (Tipos de datos Unicode)','CHAR','TEXT'],correct:1,explanation:'Se debe usar NVARCHAR para las cadenas de texto que se ejecutarán con sp_executesql, ya que maneja correctamente caracteres Unicode.'},
+            {type:'pregunta',text:'14. ¿Cuál es la diferencia principal entre un Procedimiento Almacenado y una Función en cuanto a su propósito y uso?',options:['El SP solo sirve para leer datos y la Función modifica las tablas físicas.','El SP está diseñado para ejecutar operaciones DML y lógica compleja; la Función se especializa exclusivamente en realizar cálculos y retornar datos.','Las Funciones pueden ejecutar SQL Dinámico y los SP tienen estrictamente prohibido usarlo.','Los SP se guardan en el cliente y las Funciones se guardan en el servidor.'],correct:1,explanation:'Los SP ejecutan operaciones complejas; las Funciones se especializan en cálculos y retornan valores.'},
+            {type:'pregunta',text:'15. ¿Cómo difieren los valores de retorno y el manejo de parámetros entre ambos objetos?',options:['Las funciones no reciben parámetros y los SP reciben un máximo de dos parámetros.','En el SP el retorno es opcional (usa parámetros OUTPUT); en la Función el retorno es obligatorio (devuelve un escalar o una tabla) y solo acepta parámetros de entrada.','Ambas estructuras obligan a retornar un código de error numérico al cliente de manera idéntica.','Las funciones devuelven valores a través de comandos EXEC y los SP mediante el comando SELECT.'],correct:1,explanation:'En un SP el retorno es opcional con OUTPUT; en una Función el retorno es obligatorio y solo acepta parámetros de entrada.'},
+            {type:'pregunta',text:'16. En cuanto al manejo de errores y transacciones, ¿qué ventaja ofrece un Procedimiento Almacenado frente a una Función?',options:['Las funciones permiten usar TRY...CATCH pero no transacciones.','El SP permite el uso completo de bloques TRY...CATCH y la gestión de transacciones; las Funciones no permiten implementar ninguna de las dos cosas.','Las funciones manejan transacciones de manera implícita sin comandos adicionales.','Los SP prohíben el manejo de errores para evitar caídas en el sistema de producción.'],correct:1,explanation:'Los SP permiten TRY...CATCH y transacciones completas; las Funciones no permiten ninguno de estos.'},
+            {type:'pregunta',text:'17. ¿Qué son los "Efectos Secundarios" en una base de datos y cómo se comportan en Procedimientos y Funciones?',options:['Son caídas inesperadas del servidor provocadas por errores de sintaxis en las consultas.','Es la capacidad de modificar el estado real de los datos (INSERT, UPDATE, DELETE); el SP los permite, mientras que la Función es estrictamente de solo lectura y los prohíbe.','Son las alertas de seguridad que se disparan cuando un usuario inicia sesión sin permisos.','Es la duplicación automática de índices cuando se realiza una consulta masiva.'],correct:1,explanation:'Los Efectos Secundarios son cambios en los datos. Los SP los permiten; las Funciones son de solo lectura.'},
+            {type:'pregunta',text:'18. ¿Cómo se comparan los permisos de seguridad entre un Procedimiento Almacenado y una Función?',options:['Las funciones tienen permisos totalmente configurables por el usuario final de la app.','Los SP ofrecen un esquema de permisos amplio y muy flexible; las Funciones operan bajo restricciones estrictas que dependen del contexto de su uso.','Ninguno de los dos objetos cuenta con capas de seguridad en SQL Server.','Las funciones tienen mayor flexibilidad de permisos que los procedimientos almacenados.'],correct:1,explanation:'Los SP tienen permisos más flexibles; las Funciones operan con restricciones estrictas según el contexto.'},
+            {type:'pregunta',text:'19. ¿Qué es una Función Definida por el Usuario (UDF) en SQL Server?',options:['Una herramienta para cambiar la contraseña de los usuarios administradores.','Una rutina que acepta parámetros de entrada, realiza una acción o cálculo específico y devuelve obligatoriamente un valor escalar o una tabla.','Un script que se ejecuta automáticamente cuando se enciende la computadora del usuario.','Un reporte visual diseñado para exportarse directamente a archivos de Microsoft Excel.'],correct:1,explanation:'Una UDF es una rutina que acepta parámetros, realiza cálculos y devuelve obligatoriamente un valor escalar o tabla.'},
+            {type:'pregunta',text:'20. ¿Cuáles son las dos categorías principales de Funciones?',options:['Funciones de Sistema y Funciones de Seguridad.','Funciones Escalares y Funciones con Valores de Tabla (Table-Valued Functions).','Funciones Matemáticas y Funciones de Texto Simples.','Funciones de Entrada y Funciones de Salida Rápida.'],correct:1,explanation:'Las dos categorías principales son: Funciones Escalares (retornan un valor) y Funciones con Valores de Tabla (retornan una tabla).'},
+            {type:'pregunta',text:'21. Explica la anatomía obligatoria de creación de una Función Escalar.',options:['CREATE FUNCTION, parámetros, cláusula RETURNS [Tipo_Dato], bloque AS BEGIN/END y sentencia RETURN [Valor].','START FUNCTION, variables globales, ejecución directa y cierre con la palabra clave STOP.','CREATE TABLE FUNCTION, cuerpo SELECT directo, sin parámetros y cierre con GO.','DECLARE FUNCTION, definición de parámetros de salida obligatorios y cuerpo transaccional.'],correct:0,explanation:'La anatomía es: CREATE FUNCTION, parámetros, RETURNS tipo, AS BEGIN/END y sentencia RETURN obligatoria.'},
+            {type:'pregunta',text:'22. ¿Cuál es la diferencia clave en el encabezado (RETURNS) entre una Función Escalar y una Función de Tabla?',options:['La escalar usa RETURNS SCALAR y la de tabla usa RETURNS ROWSET.','La escalar define un tipo de dato primitivo (ej. RETURNS INT); la de tabla define explícitamente una estructura relacional (RETURNS TABLE o una variable tipo tabla).','La de tabla no lleva la palabra reservada RETURNS en su encabezado.','La escalar devuelve múltiples valores separados por comas en el encabezado.'],correct:1,explanation:'La Escalar retorna un tipo primitivo (RETURNS INT); la de Tabla retorna una estructura (RETURNS TABLE).'},
+            {type:'pregunta',text:'23. ¿Cómo se debe invocar una Función Escalar en una consulta SQL Server?',options:['Usando el comando EXECUTE NombreFuncion.','Es obligatorio anteponer el esquema de la base de datos (ej. SELECT dbo.NombreFuncion(parámetro);).','Escribiendo únicamente el nombre de la función en una línea en blanco.','Invocándola dentro de la cláusula FROM de manera directa sin prefijos.'],correct:1,explanation:'Las Funciones Escalares se invocan con el esquema: SELECT dbo.NombreFuncion(parámetro);'},
+            {type:'pregunta',text:'24. ¿Cómo se invoca una Función con Valores de Tabla (TVF)?',options:['Usando la instrucción PRINT dbo.NombreFuncion.','Se trata exactamente igual que una tabla física, colocándose directamente dentro de la cláusula FROM (ej. SELECT * FROM dbo.NombreFuncion(parámetro);).','Mediante parámetros de salida vinculados a variables locales de tipo entero.','No se puede invocar mediante consultas SELECT ordinarias.'],correct:1,explanation:'Las TVF se usan como tablas: SELECT * FROM dbo.NombreFuncion(parámetro);'},
+            {type:'pregunta',text:'25. ¿En qué carpeta de SQL Server Management Studio se ubican y administran las funciones?',options:['Base de Datos -> Tablas -> Claves Primarias','Base de Datos -> Programación -> Funciones (subdivididas en Escalares o de Tabla)','Servidor -> Seguridad -> Logins principales','Base de Datos -> Vistas -> Diagramas Relacionales'],correct:1,explanation:'Las Funciones se encuentran en: Base de Datos -> Programación -> Funciones.'},
+            {type:'ejercicio',text:'Ejercicio 1 — Fácil | SP básico sin parámetros',question:'Escribe un procedimiento almacenado llamado SP_TodosEstudiantes que devuelva todos los registros de la tabla ESTUDIANTE.',options:['SELECT * FROM ESTUDIANTE;','CREATE OR ALTER PROCEDURE SP_TodosEstudiantes AS BEGIN SELECT * FROM ESTUDIANTE END; EXEC SP_TodosEstudiantes','PROCEDURE SP_TodosEstudiantes (@estudiante INT);','CREATE TABLE SP_TodosEstudiantes FROM ESTUDIANTE;'],correct:1,explanation:'La forma correcta de crear un SP sin parámetros es usar CREATE OR ALTER PROCEDURE con BEGIN/END y el cuerpo de la consulta.'},
+            {type:'ejercicio',text:'Ejercicio 2 — Fácil | SP con parámetro de entrada',question:'Crea un procedimiento SP_BuscarEstudiante que reciba el ID de un estudiante (@id INT) y devuelva sus datos.',options:['SELECT * FROM ESTUDIANTE WHERE id_estudiante = 5;','CREATE PROCEDURE SP_BuscarEstudiante @id INT AS BEGIN SELECT * FROM ESTUDIANTE WHERE id_estudiante = @id END;','DECLARE @id INT; SELECT * FROM ESTUDIANTE;','CREATE OR ALTER SP_BuscarEstudiante USING (@id);'],correct:1,explanation:'El parámetro @id se declara después del nombre del SP; dentro del cuerpo se usa en la cláusula WHERE.'},
+            {type:'ejercicio',text:'Ejercicio 3 — Fácil | Función escalar',question:'Crea una función FN_SaludoEstudiante que reciba un nombre (@nombre NVARCHAR(50)) y retorne el texto "Hola, [nombre]!".',options:['SELECT \'Hola, \' + nombre + \'!\' FROM ESTUDIANTE;','CREATE OR ALTER FUNCTION FN_SaludoEstudiante (@nombre NVARCHAR(50)) RETURNS NVARCHAR(100) AS BEGIN RETURN \'Hola, \' + @nombre + \'!\' END;','CREATE FUNCTION FN_Saludo AS RETURN nombre;','DECLARE @nombre = \'Hola\'; SELECT @nombre;'],correct:1,explanation:'Las funciones escalares requieren CREATE FUNCTION, RETURNS con tipo, AS BEGIN/END y sentencia RETURN.'},
+            {type:'ejercicio',text:'Ejercicio 4 — Medio | SP dinámico',question:'Escribe un procedimiento SP_ConsultarTabla que reciba el nombre de una tabla como parámetro y ejecute un SELECT * sobre ella dinámicamente.',options:['SELECT * FROM @tabla;','CREATE OR ALTER PROCEDURE SP_ConsultarTabla @tabla NVARCHAR(50) AS BEGIN DECLARE @script NVARCHAR(255) SET @script = \'SELECT * FROM \' + @tabla EXEC sp_executesql @script END;','CREATE PROCEDURE SP_Consultar AS SELECT * FROM ESTUDIANTE;','EXECUTE SELECT * FROM @tabla;'],correct:1,explanation:'El SQL dinámico se construye como NVARCHAR y se ejecuta con sp_executesql, permitiendo que la consulta sea variable según el parámetro.'},
+            {type:'ejercicio',text:'Ejercicio 5 — Medio | Función con valores de tabla (TVF)',question:'Crea una función FN_EstudiantesPorGrupo que reciba un @id_grupo INT y retorne todos los estudiantes inscritos en ese grupo consultando la tabla INSCRIPCION.',options:['SELECT * FROM ESTUDIANTE WHERE id_grupo = @id_grupo;','CREATE OR ALTER FUNCTION FN_EstudiantesPorGrupo (@id_grupo INT) RETURNS TABLE AS RETURN (SELECT e.* FROM ESTUDIANTE e INNER JOIN INSCRIPCION i ON e.id_estudiante = i.id_estudiante WHERE i.id_grupo = @id_grupo);','CREATE PROCEDURE FN_Estudiantes AS SELECT * FROM INSCRIPCION;','SELECT * FROM dbo.INSCRIPCION GROUP BY id_grupo;'],correct:1,explanation:'Las TVF retornan tabla y se definen con RETURNS TABLE, SELECT y JOIN, permitiendo usarlas como tablas en las consultas.'}
+        ];
+
+        let currentQuestion=0,score=0,answered=false,selectedAnswer=null,isExercise=false;
+        function initQuiz(){displayQuestion()}
+        function displayQuestion(){
+            const q=questions[currentQuestion],total=questions.length;
+            isExercise=q.type==='ejercicio';
+            document.getElementById('progressText').textContent=`PREGUNTA ${currentQuestion+1} DE ${total}`;
+            document.getElementById('scoreText').textContent=`CORRECTAS: ${score}/${total}`;
+            document.getElementById('progressFill').style.width=((currentQuestion+1)/total*100)+'%';
+            const label=isExercise?'EJERCICIO':'PREGUNTA';
+            document.getElementById('questionType').textContent=label;
+            document.getElementById('questionType').classList.toggle('ejercicio',isExercise);
+            const text=isExercise?`${q.text}\n\n${q.question}`:q.text;
+            document.getElementById('questionText').textContent=text;
+            const container=document.getElementById('optionsContainer');
+            container.innerHTML='';
+            if(isExercise){
+                const textarea=document.createElement('textarea');
+                textarea.className='exercise-textarea';
+                textarea.id='exerciseInput';
+                textarea.placeholder='Escribe aquí tu respuesta (código SQL)...';
+                container.appendChild(textarea);
+                document.getElementById('verifyBtn').style.display='block';
+                document.getElementById('showAnswerBtn').style.display='none';
+            }else{
+                q.options.forEach((opt,idx)=>{
+                    const label=document.createElement('label');
+                    label.className='option';
+                    label.innerHTML=`<input type="radio" name="answer" value="${idx}"><span>${opt}</span>`;
+                    label.addEventListener('click',function(){if(!answered){selectedAnswer=idx;document.querySelectorAll('.option').forEach(o=>o.classList.remove('selected'));this.classList.add('selected')}});
+                    container.appendChild(label);
+                });
+                document.getElementById('verifyBtn').style.display='block';
+                document.getElementById('showAnswerBtn').style.display='none';
+            }
+            answered=false;
+            selectedAnswer=null;
+            document.getElementById('feedback').classList.remove('show');
+            document.getElementById('explanation').classList.remove('show');
+            document.getElementById('verifyBtn').disabled=false;
+            document.getElementById('nextBtn').disabled=true;
+        }
+        function verifyAnswer(){
+            if(isExercise){
+                const input=document.getElementById('exerciseInput').value.trim().toUpperCase();
+                const correctAnswer=questions[currentQuestion].options[questions[currentQuestion].correct].toUpperCase();
+                const isCorrect=input.includes(correctAnswer.substring(0,Math.min(20,correctAnswer.length)));
+                answered=true;
+                if(isCorrect){
+                    score++;
+                    document.getElementById('feedback').className='feedback show correct';
+                    document.getElementById('feedback').textContent='✓ ¡CORRECTO!';
+                }else{
+                    document.getElementById('feedback').className='feedback show incorrect';
+                    document.getElementById('feedback').textContent='✗ INCORRECTO';
+                    document.getElementById('showAnswerBtn').style.display='block';
+                }
+                document.getElementById('explanation').classList.add('show');
+                document.getElementById('explanation').textContent='▸ '+questions[currentQuestion].explanation;
+                document.getElementById('exerciseInput').disabled=true;
+                document.getElementById('verifyBtn').disabled=true;
+                document.getElementById('nextBtn').disabled=false;
+            }else{
+                if(selectedAnswer===null){alert('Selecciona una respuesta');return}
+                answered=true;
+                const q=questions[currentQuestion],correct=selectedAnswer===q.correct;
+                document.querySelectorAll('.option').forEach((o,i)=>{
+                    o.classList.add('disabled');
+                    if(i===q.correct)o.classList.add('correct');
+                    if(i===selectedAnswer&&!correct)o.classList.add('incorrect');
+                });
+                if(correct){
+                    score++;
+                    document.getElementById('feedback').className='feedback show correct';
+                    document.getElementById('feedback').textContent='✓ ¡CORRECTO!';
+                }else{
+                    document.getElementById('feedback').className='feedback show incorrect';
+                    document.getElementById('feedback').textContent='✗ INCORRECTO - Respuesta: '+q.options[q.correct];
+                }
+                document.getElementById('explanation').classList.add('show');
+                document.getElementById('explanation').textContent='▸ '+q.explanation;
+                document.getElementById('verifyBtn').disabled=true;
+                document.getElementById('nextBtn').disabled=false;
+            }
+            document.getElementById('scoreText').textContent=`CORRECTAS: ${score}/${questions.length}`;
+        }
+        function showAnswer(){
+            const q=questions[currentQuestion];
+            document.getElementById('explanation').classList.add('show');
+            document.getElementById('explanation').innerHTML=`<strong>Respuesta Correcta:</strong><br><code style="background: rgba(0,88,204,0.3); padding: 10px; border-radius: 8px; display: block; margin-top: 10px;">${q.options[q.correct]}</code><br><br><strong>Explicación:</strong><br>${q.explanation}`;
+            document.getElementById('showAnswerBtn').style.display='none';
+        }
+        function nextQuestion(){
+            currentQuestion++;
+            if(currentQuestion<questions.length)displayQuestion();
+            else showResults();
+        }
+        function showResults(){
+            const total=questions.length,percent=(score/total)*100;
+            document.getElementById('quizContainer').style.display='none';
+            document.getElementById('resultsContainer').style.display='block';
+            document.getElementById('finalScore').textContent=`${score}/${total}`;
+            let msg='';
+            if(percent===100)msg='🔥 ¡EXCELENTE! Dominaste completamente el tema.';
+            else if(percent>=80)msg='⭐ ¡MUY BIEN! Obtuviste una excelente calificación.';
+            else if(percent>=60)msg='✓ ¡BUEN TRABAJO! Has aprobado el cuestionario.';
+            else if(percent>=40)msg='→ Necesitas estudiar más. ¡Intenta nuevamente!';
+            else msg='→ Necesitas repasar el material. ¡Adelante!';
+            document.getElementById('performanceMessage').textContent=`${Math.round(percent)}% - ${msg}`;
+        }
+        function restartQuiz(){
+            currentQuestion=0;
+            score=0;
+            answered=false;
+            selectedAnswer=null;
+            isExercise=false;
+            document.getElementById('quizContainer').style.display='block';
+            document.getElementById('resultsContainer').style.display='none';
+            displayQuestion();
+        }
+        function jumpToExercises(){
+            currentQuestion=25;
+            score=0;
+            answered=false;
+            selectedAnswer=null;
+            isExercise=false;
+            document.getElementById('quizContainer').style.display='block';
+            document.getElementById('resultsContainer').style.display='none';
+            displayQuestion();
+        }
+        window.addEventListener('load',initQuiz);
+    </script>
+</body>
+</html>
